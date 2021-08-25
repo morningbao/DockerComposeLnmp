@@ -1,0 +1,7 @@
+/log/php/*
+/log/nginx/*
+/log/redis/*
+/log/mysql/master/*
+/data/mysql/master/*
+/data/redis/*
+

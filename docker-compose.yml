@@ -1,0 +1,39 @@
+services:
+    php:
+        build: ./php
+        volumes: 
+            - ${WORK_DIR}:/srv/http
+            - ${CONF_DIR}/php/php.ini:/usr/local/etc/php/php.ini
+            - ${CONF_DIR}/php/php-fpm.d:/usr/local/etc/php-fpm.d
+            - ${LOG_DIR}/php:/var/log/php
+        restart: always
+    nginx:
+        build: ./nginx
+        ports:
+            - 80:80 
+        volumes: 
+            - ${WORK_DIR}:/srv/http
+            - ${CONF_DIR}/nginx/conf.d:/etc/nginx/conf.d
+            - ${CONF_DIR}/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ${LOG_DIR}/nginx:/var/log/nginx
+        restart: always
+    mysql:
+        build: ./mysql
+        ports:
+            - 3306:3306
+        volumes:
+            - ${DATA_DIR}/mysql/master:/var/lib/mysql
+            - ${CONF_DIR}/mysql/master:/etc/mysql/conf.d
+            - ${LOG_DIR}/mysql/master:/var/log/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        restart: always
+    redis:
+        build: ./redis
+        volumes:
+            - ${CONF_DIR}/redis/:/usr/local/etc/redis
+            - ${DATA_DIR}/redis:/data
+            - ${LOG_DIR}/redis:/var/log/redis
+        command: ["redis-server","/usr/local/etc/redis/redis.conf"]
+        restart: always
+version: "3"
